@@ -641,7 +641,7 @@ public class ExecutorStepTest {
         });
     }
 
-    @Issue("JENKINS-30759")
+    @Issue("JENKINS-36547")
 	@Test public void reuseNodeFromPreviousRun() {
 		story.addStep(new Statement() {
 			@Override public void evaluate() throws Throwable {
@@ -676,7 +676,7 @@ public class ExecutorStepTest {
 		});
 	}
 
-    @Issue("JENKINS-30759")
+    @Issue("JENKINS-36547")
 	@Test public void reuseNodesWithDifferentLabelsFromPreviousRuns() {
 		story.addStep(new Statement() {
 			@Override public void evaluate() throws Throwable {
@@ -734,7 +734,7 @@ public class ExecutorStepTest {
 		});
 	}
 
-    @Issue("JENKINS-30759")
+    @Issue("JENKINS-36547")
     @Test public void reuseNodesWithSameLabelsInDifferentStages() {
         story.addStep(new Statement() {
             @Override public void evaluate() throws Throwable {
@@ -796,7 +796,7 @@ public class ExecutorStepTest {
         });
     }
 
-    @Issue("JENKINS-30759")
+    @Issue("JENKINS-36547")
     @Test public void reuseNodesWithSameLabelsInDifferentReorderedStages() {
         story.addStep(new Statement() {
             @Override public void evaluate() throws Throwable {
@@ -871,7 +871,7 @@ public class ExecutorStepTest {
         });
     }
 
-    @Issue("JENKINS-30759")
+    @Issue("JENKINS-36547")
     @Test public void reuseNodesWithSameLabelsInParallelStages() {
         story.addStep(new Statement() {
             @Override public void evaluate() throws Throwable {

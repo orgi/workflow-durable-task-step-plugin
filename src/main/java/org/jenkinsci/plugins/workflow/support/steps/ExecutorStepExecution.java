@@ -539,7 +539,7 @@ public class ExecutorStepExecution extends AbstractStepExecutionImpl {
 			for (FlowNode runningNode : heads) {
 				// See if this step is inside our node {} block, and track the associated label.
 				String enclosingLabel = null;
-				// Just in case we're asking for the enclosing label from within a node step. See JENKINS-30759
+				// Just in case we're asking for the enclosing label from within a node step. See JENKINS-36547
 				boolean match = runningNode.equals(executorStepNode);
 				Iterator<? extends BlockStartNode> it = runningNode.iterateEnclosingBlocks().iterator();
 				int count = 0;
