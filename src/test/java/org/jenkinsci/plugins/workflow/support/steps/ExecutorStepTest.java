@@ -935,6 +935,7 @@ public class ExecutorStepTest {
         });
     }
 
+    @Issue("JENKINS-36547")
     @Test public void reuseNodeInSameRun() {
         story.addStep(new Statement() {
             @Override public void evaluate() throws Throwable {
