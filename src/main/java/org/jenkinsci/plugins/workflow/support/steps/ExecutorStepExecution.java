@@ -30,7 +30,6 @@ import hudson.security.ACLContext;
 import hudson.security.AccessControlled;
 import hudson.security.Permission;
 import hudson.slaves.WorkspaceList;
-
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Serializable;
@@ -44,14 +43,10 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
-
 import static java.util.logging.Level.*;
-
 import java.util.logging.Logger;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
-
-import jdk.nashorn.internal.ir.Block;
 import jenkins.model.Jenkins;
 import jenkins.model.Jenkins.MasterComputer;
 import jenkins.model.queue.AsynchronousExecution;
@@ -71,7 +66,6 @@ import org.jenkinsci.plugins.workflow.flow.FlowExecution;
 import org.jenkinsci.plugins.workflow.flow.FlowExecutionOwner;
 import org.jenkinsci.plugins.workflow.graph.BlockStartNode;
 import org.jenkinsci.plugins.workflow.graph.FlowNode;
-import org.jenkinsci.plugins.workflow.graphanalysis.FlowScanningUtils;
 import org.jenkinsci.plugins.workflow.steps.AbstractStepExecutionImpl;
 import org.jenkinsci.plugins.workflow.steps.BodyExecutionCallback;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
@@ -149,7 +143,7 @@ public class ExecutorStepExecution extends AbstractStepExecutionImpl {
                     LOGGER.log(FINE, "canceling {0}", item);
                     break;
                 } else {
-                    LOGGER.log(FINE, "no match on {0} with {1} vs. {2}", new Object[]{item, task.context, context});
+                    LOGGER.log(FINE, "no match on {0} with {1} vs. {2}", new Object[] {item, task.context, context});
                 }
             } else {
                 LOGGER.log(FINE, "no match on {0}", item);
@@ -169,7 +163,7 @@ public class ExecutorStepExecution extends AbstractStepExecutionImpl {
                             LOGGER.log(FINE, "canceling {0}", exec);
                             break COMPUTERS;
                         } else {
-                            LOGGER.log(FINE, "no match on {0} with {1} vs. {2}", new Object[]{exec, actualContext, context});
+                            LOGGER.log(FINE, "no match on {0} with {1} vs. {2}", new Object[] {exec, actualContext, context});
                         }
                     } else {
                         LOGGER.log(FINE, "no match on {0}", exec);
@@ -198,7 +192,7 @@ public class ExecutorStepExecution extends AbstractStepExecutionImpl {
                     for (Executor e : c.getExecutors()) {
                         Queue.Executable exec = e.getCurrentExecutable();
                         if (exec instanceof PlaceholderTask.PlaceholderExecutable && ((PlaceholderTask.PlaceholderExecutable) exec).getParent().context.equals(getContext())) {
-                            LOGGER.log(FINE, "Node block in {0} is running on {1} after reload", new Object[]{run, c.getName()});
+                            LOGGER.log(FINE, "Node block in {0} is running on {1} after reload", new Object[] {run, c.getName()});
                             return;
                         }
                     }
@@ -266,7 +260,7 @@ public class ExecutorStepExecution extends AbstractStepExecutionImpl {
     public static final class PlaceholderTask implements ContinuedTask, Serializable, AccessControlled {
 
         /** keys are {@link #cookie}s */
-        private static final Map<String, RunningTask> runningTasks = new HashMap<String, RunningTask>();
+        private static final Map<String,RunningTask> runningTasks = new HashMap<String,RunningTask>();
 
         private final StepContext context;
         /** Initially set to {@link ExecutorStep#getLabel}, if any; later switched to actual self-label when block runs. */
@@ -334,7 +328,7 @@ public class ExecutorStepExecution extends AbstractStepExecutionImpl {
             return cookie;
         }
 
-        @SuppressFBWarnings(value = "RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE", justification = "TODO 1.653+ switch to Jenkins.getInstanceOrNull")
+        @SuppressFBWarnings(value="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE", justification="TODO 1.653+ switch to Jenkins.getInstanceOrNull")
         @Override public Label getAssignedLabel() {
             if (label == null) {
                 return null;
@@ -349,7 +343,7 @@ public class ExecutorStepExecution extends AbstractStepExecutionImpl {
             }
         }
 
-        @SuppressFBWarnings(value = "RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE", justification = "TODO 1.653+ switch to Jenkins.getInstanceOrNull")
+        @SuppressFBWarnings(value="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE", justification="TODO 1.653+ switch to Jenkins.getInstanceOrNull")
         @Override public Node getLastBuiltOn() {
             if (label == null) {
                 return null;
@@ -383,7 +377,7 @@ public class ExecutorStepExecution extends AbstractStepExecutionImpl {
         }
 
         @Override public Queue.Task getOwnerTask() {
-            Run<?, ?> r = run();
+            Run<?,?> r = run();
             if (r != null && r.getParent() instanceof Queue.Task) {
                 return (Queue.Task) r.getParent();
             } else {
@@ -455,7 +449,7 @@ public class ExecutorStepExecution extends AbstractStepExecutionImpl {
         }
 
         public @CheckForNull Run<?,?> runForDisplay() {
-            Run<?, ?> r = run();
+            Run<?,?> r = run();
             if (r == null && /* not stored prior to 1.13 */runId != null) {
                 SecurityContext orig = ACL.impersonate(ACL.SYSTEM);
                 try {
@@ -469,13 +463,13 @@ public class ExecutorStepExecution extends AbstractStepExecutionImpl {
 
         @Override public String getUrl() {
             // TODO ideally this would be found via FlowExecution.owner.executable, but how do we check for something with a URL? There is no marker interface for it: JENKINS-26091
-            Run<?, ?> r = runForDisplay();
+            Run<?,?> r = runForDisplay();
             return r != null ? r.getUrl() : "";
         }
 
         @Override public String getDisplayName() {
             // TODO more generic to check whether FlowExecution.owner.executable is a ModelObject
-            Run<?, ?> r = runForDisplay();
+            Run<?,?> r = runForDisplay();
             if (r != null) {
                 String runDisplayName = r.getFullDisplayName();
                 String enclosingLabel = getEnclosingLabel();
@@ -574,7 +568,7 @@ public class ExecutorStepExecution extends AbstractStepExecutionImpl {
         }
 
         @Override public long getEstimatedDuration() {
-            Run<?, ?> r = run();
+            Run<?,?> r = run();
             // Not accurate if there are multiple slaves in one build, but better than nothing:
             return r != null ? r.getEstimatedDuration() : -1;
         }
@@ -661,7 +655,7 @@ public class ExecutorStepExecution extends AbstractStepExecutionImpl {
         /**
          * Called when the body closure is complete.
          */
-        @SuppressFBWarnings(value = "SE_BAD_FIELD", justification = "lease is pickled")
+        @SuppressFBWarnings(value="SE_BAD_FIELD", justification="lease is pickled")
         private static final class Callback extends BodyExecutionCallback.TailCall {
 
             private final String cookie;
@@ -727,7 +721,7 @@ public class ExecutorStepExecution extends AbstractStepExecutionImpl {
                             runningTasks.put(cookie, new RunningTask());
                         }
                         // For convenience, automatically allocate a workspace, like WorkspaceStep would:
-                        Job<?, ?> j = r.getParent();
+                        Job<?,?> j = r.getParent();
                         if (!(j instanceof TopLevelItem)) {
                             throw new Exception(j + " must be a top-level job");
                         }
